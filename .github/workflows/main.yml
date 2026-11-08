@@ -18,9 +18,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Unpack ZIP and Build APK
+      - name: Unpack Any Archive and Build APK
         run: |
-          python3 -c "import glob, zipfile; [zipfile.ZipFile(z).extractall('.') for z in glob.glob('*.zip')]"
+          ls -la
+          python3 -c "import os, zipfile; [zipfile.ZipFile(f).extractall('.') for f in os.listdir('.') if os.path.isfile(f) and zipfile.is_zipfile(f)]"
+          ls -la
           curl -sL https://services.gradle.org/distributions/gradle-8.5-bin.zip -o /tmp/g.zip
           python3 -c "import zipfile; zipfile.ZipFile('/tmp/g.zip').extractall('/tmp')"
           chmod +x /tmp/gradle-8.5/bin/gradle
@@ -32,4 +34,3 @@ jobs:
           name: FitTrainerLive-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           overwrite: true
-          
